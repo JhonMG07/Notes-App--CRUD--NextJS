@@ -1,35 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTasks } from "@/context/TaskContext";
-import { useRouter } from "next/navigation"
-function Page() {
-  const { createTask } = useTasks();
-  const [task, setTask] = useState();
+import { useRouter } from "next/navigation";
+import {useForm} from "react-hook-form"
+
+function Page({ params }) {
+  // si ponemos params y entramos desde edit recibiremos el parametro id, y si entramos por new no.
+
+  const { tasks, createTask, editTask } = useTasks();
+  
   const router = useRouter();
-  const handleChange = (e) => {
-    setTask({ ...task, [e.target.name]: e.target.value });
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault(); //para que no se recarge la pagina\
-    createTask(task.title, task.description)
-    router.push('/')
+  const {register,handleSubmit,setValue, formState:{
+    errors
+  }} = useForm();
+  
 
+  const onSubmit = handleSubmit((data) => {
 
-  };
+    if(params.id){
+      editTask(params.id,data); //se le pasa el params para que actualice la tarea que yo deseo
+    }else{
+      createTask(data.title, data.description);
+    }
+    router.push("/");
+  })
+    
+
+  useEffect(() => {
+    if (params.id) {
+      const taskFound = tasks.find((task) => task.id === params.id);
+
+      if (taskFound) {
+        setValue('title',taskFound.title);
+        setValue('description',taskFound.description);
+      }
+    }
+  }, [setValue,params.id, tasks]);
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       <input
-        name="title"
+        
         type="text"
         placeholder="Write a title"
-        onChange={handleChange}
+        {...register("title", {required:true})} //hace la funcion de onchange cuando escribo algo
       />
+
+      {errors.title && (
+        <span>
+          This field is required
+        </span>
+      )}
       <textarea
-        name="description"
+        
         placeholder="write a description"
-        onChange={handleChange}
+        {...register("description",{required:true})}
       />
+      {errors.description && (
+        <span>
+          This field is required
+        </span>
+      )}
       <button type="submit">Save</button>
     </form>
   );

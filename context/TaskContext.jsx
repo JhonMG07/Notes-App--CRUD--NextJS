@@ -1,8 +1,8 @@
 "use client";
 
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { createContext, useContext, useState } from "react";
-import {v4 as uuid} from "uuid"
-
+import { v4 as uuid } from "uuid";
 
 export const TaskContext = createContext();
 
@@ -16,36 +16,37 @@ export const useTasks = () => {
 export const TaskProvider = ({ children }) => {
   //aqui le pouedo pasar una variable global y dentro del <> le doyy un value ={}
 
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "my first task",
-      description: "this is my first task",
-    },
-    {
-      id: 2,
-      title: "my second task",
-      description: "this is my second task",
-    },
-    {
-      id: 3,
-      title: "my trird task",
-      description: "this is my trird task",
-    },
-  ]);
+  const [tasks, setTasks] = useLocalStorage('tasks', []);
 
   const createTask = (title, description) =>
-    setTasks([...tasks, { 
-      title, 
-      description, 
-      id: uuid()}]);
+    setTasks([
+      ...tasks,
+      {
+        title,
+        description,
+        id: uuid(),
+      },
+    ]);
 
+  const deleteTask = (id) => {
+    setTasks([...tasks.filter((task) => task.id !== id)]); //recorre todo el arreglo y si encuentra la id que se pasa entonces no se agrega al arreglo
+  };
+
+  const editTask = (id, updatedTask) => {
+    setTasks([
+      ...tasks.map((task) =>
+        task.id === id ? { ...task, ...updatedTask } : task
+      ),
+    ]);
+  };
 
   return (
     <TaskContext.Provider
       value={{
         tasks,
-        createTask
+        createTask,
+        deleteTask,
+        editTask,
       }}
     >
       {children}

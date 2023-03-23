@@ -1,8 +1,5 @@
+import newForm from "@/app/new/page"
 
-function page({params}) {
-  return (
-    <div>editando {params.id}</div>
-  )
-}
 
-export default page
+export default newForm
+//esto sirve para reutilziar componentes
