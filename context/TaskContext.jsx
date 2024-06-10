@@ -16,7 +16,7 @@ export const useTasks = () => {
 export const TaskProvider = ({ children }) => {
   //aqui le pouedo pasar una variable global y dentro del <> le doyy un value ={}
 
-  const [tasks, setTasks] = useLocalStorage('tasks', []);
+  const [tasks, setTasks] = useLocalStorage("tasks", []);
 
   const createTask = (title, description) =>
     setTasks([
@@ -25,6 +25,8 @@ export const TaskProvider = ({ children }) => {
         title,
         description,
         id: uuid(),
+        isFinished: false,
+        createdAt: new Date().toLocaleDateString(),
       },
     ]);
 
@@ -39,6 +41,13 @@ export const TaskProvider = ({ children }) => {
       ),
     ]);
   };
+  const makeToTaskFinish = (id) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, isFinished: !task.isFinished } : task
+      )
+    );
+  };
 
   return (
     <TaskContext.Provider
@@ -47,6 +56,7 @@ export const TaskProvider = ({ children }) => {
         createTask,
         deleteTask,
         editTask,
+        makeToTaskFinish,
       }}
     >
       {children}

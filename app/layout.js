@@ -1,6 +1,8 @@
-
 import { TaskProvider } from "../context/TaskContext";
 import { Navbar } from "@/components/Navbar";
+import { Toaster } from "../components/Totaster";
+import "./globals.css";
+import { Layaout } from "@/components/Layout";
 
 export const metadata = {
   title: "Create Next App",
@@ -8,14 +10,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // este es nuestro root
   return (
     <html lang="en">
-      {/*este contiene todas la pagina y añadimos el taskprovider como parte del context para que todos los childerns tengan acceso*/}
+      {/*este contiene todas la pagina y aÃ±adimos el taskprovider como parte del context para que todos los childerns tengan acceso*/}
 
       <body>
         <TaskProvider>
           <Navbar />
-          {children}
+          <Layaout>{children}</Layaout>
+
+          <Toaster />
         </TaskProvider>
       </body>
     </html>
