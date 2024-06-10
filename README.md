@@ -34,10 +34,10 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 For this proyect we use
 - Nextjs
 - Tailwind as CSS
-- Verces as deploy tool
+- Vercel as deploy tool
 
 Also
-- architecture per layer
+- Architecture per layer
 - Camel case 
 
 ## Learn More
